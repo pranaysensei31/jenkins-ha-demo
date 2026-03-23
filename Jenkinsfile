@@ -2,44 +2,53 @@ pipeline {
     agent any
 
     triggers {
-        cron('H/5 * * * *')
+        cron('* * * * *')
     }
 
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello from Jenkins HA Pipeline!'
+                echo 'Cloning repository from GitHub...'
+                sh 'sleep 3'
+                echo 'Repository cloned successfully!'
             }
         }
 
-        stage('Check Node') {
+        stage('Build') {
             steps {
-                echo "Running on: ${env.NODE_NAME}"
-                echo "Job: ${env.JOB_NAME}"
-                echo "Build #: ${env.BUILD_NUMBER}"
-            }
-        }
-
-        stage('Simulate Build') {
-            steps {
-                echo 'Simulating build process...'
+                echo 'Starting build process...'
                 sh 'echo Build started at $(date)'
-                sh 'sleep 2'
-                echo 'Build complete!'
+                sh 'sleep 10'
+                echo 'Compiling source code...'
+                sh 'sleep 5'
+                echo 'Build completed successfully!'
             }
         }
 
-        stage('Simulate Test') {
+        stage('Test') {
             steps {
-                echo 'Running tests...'
-                sh 'echo All tests passed!'
+                echo 'Running unit tests...'
+                sh 'sleep 5'
+                echo 'Test 1 passed!'
+                sh 'sleep 3'
+                echo 'Test 2 passed!'
+                sh 'sleep 3'
+                echo 'All tests passed!'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                sh 'sleep 5'
+                echo 'Deployment complete!'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline ran successfully!'
+            echo 'Pipeline finished successfully on node: ${env.NODE_NAME}'
         }
         failure {
             echo 'Pipeline failed!'
